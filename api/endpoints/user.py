@@ -59,8 +59,9 @@ async def add_user_data(user: UserModel = Body(...)):
     return ResponseModel(new_user, "User added successfully.")
 
 
-@router.delete("/{id}", response_description="User data deleted from the database")
+@router.delete("/{user_id}", response_description="User data deleted from the database")
 async def delete_user_data(user_id: str):
+    print(user_id)
     deleted_user = await delete_user(user_id)
     return ResponseModel("User with ID: {} removed".format(user_id), "User deleted successfully") \
         if deleted_user \

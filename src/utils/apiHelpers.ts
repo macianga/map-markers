@@ -1,6 +1,7 @@
 const BASE_URL = "http://localhost:5000";
 const CREATE_USER_URL = BASE_URL + "/user/create"
 const GET_ALL_USERS_URL = BASE_URL + "/user"
+const DELETE_USER_URL = BASE_URL + "/user"
 
 
 export type UserType = {
@@ -27,4 +28,8 @@ export const createUser = async () =>{
 
 export const deleteUser = async (id: string) =>{
   console.log(id);
+  const response = await fetch(`${DELETE_USER_URL}/${id}`, {
+    method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+  });
+  console.log(response.json()); // parses JSON response into native JavaScript objects
 }

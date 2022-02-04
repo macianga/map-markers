@@ -15,7 +15,7 @@ const render = (status: Status) => {
 
 function App() {
   const [clicks, setClicks] = React.useState<google.maps.LatLng[]>([]);
-  const [selectedUser, setSelectedUser] = useState<UserType>();
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [zoom, setZoom] = React.useState(2); // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
     lat: 0,
@@ -32,6 +32,13 @@ function App() {
   const createNewUser = async () => {
     await createUser();
     await setUsers(await getUsers());
+  }
+
+  const deleteUserFunc = async () => {
+    if(!selectedUser) return;
+    await deleteUser(selectedUser.id);
+    setUsers(await getUsers());
+    setSelectedUser(null)
   }
 
   useEffect(()=>{
@@ -90,7 +97,7 @@ function App() {
               <button
                 className="p-2 pl-5 pr-5 border-2 border-danger rounded-md text-danger w-fit
                    hover:border-danger-hover hover:text-danger-hover transition-all font-bold text-2xl mt-3"
-                onClick={() => deleteUser(selectedUser.id)}
+                onClick={deleteUserFunc}
               >DELETE USER
               </button>
             </div>
