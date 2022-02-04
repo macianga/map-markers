@@ -1,10 +1,16 @@
 from pydantic import BaseModel, EmailStr, Field
 
 
+class Coordinates(BaseModel):
+    lat: float
+    lng: float
+
+
 class UserModel(BaseModel):
     email: EmailStr = Field(...)
     firstname: str = Field(...)
     lastname: str = Field(...)
+    coordinates: Coordinates
 
     class Config:
         schema_extra = {
@@ -15,11 +21,10 @@ class UserModel(BaseModel):
             }
         }
 
+
 def ResponseModel(data, message):
     return {
-        "data": [
-            data
-        ],
+        "data": data,
         "code": 200,
         "message": message,
     }

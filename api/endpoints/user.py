@@ -1,8 +1,10 @@
+import httpx as httpx
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
-from database.database import *
-from models.users import *
+from api.config import RANDOM_USER_SERVICE_URL
+from api.database.database import retrieve_users, retrieve_user, add_user, delete_user
+from api.models.users import ResponseModel, ErrorResponseModel, UserModel, Coordinates
 
 router = APIRouter(
     prefix="/user",
@@ -17,6 +19,29 @@ async def get_users():
         if len(users) > 0 \
         else ResponseModel(
         users, "Empty list returned")
+
+
+@router.get("/create", response_description="Create user")
+async def create_user():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(RANDOM_USER_SERVICE_URL)
+        json = response.json()
+        user_json_data = json['results'][0]
+
+        print(user_json_data)
+
+        user_location = Coordinates(
+            lat=float(user_json_data["location"]["coordinates"]["latitude"]),
+            lng=float(user_json_data["location"]["coordinates"]["longitude"]),
+        )
+        user = UserModel(email=user_json_data["email"],
+                         firstname=user_json_data["name"]["first"],
+                         lastname=user_json_data["name"]["last"],
+                         coordinates=user_location
+                         )
+
+        new_user = await add_user(jsonable_encoder(user))
+        return ResponseModel(new_user, "User added successfully.")
 
 
 @router.get("/{id}", response_description="User data retrieved")
