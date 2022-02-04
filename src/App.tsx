@@ -4,8 +4,9 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
 import CustomMap from "./components/CustomMap";
-import Marker from "./components/Marker";
-import {createUser, getUsers, UserType} from "./utils/apiHelpers";
+import Marker, {CustomMarkerType} from "./components/Marker";
+import {createUser, deleteUser, getUsers, UserType} from "./utils/apiHelpers";
+import {getUserWithId} from "./utils/utils";
 
 
 const render = (status: Status) => {
@@ -14,7 +15,8 @@ const render = (status: Status) => {
 
 function App() {
   const [clicks, setClicks] = React.useState<google.maps.LatLng[]>([]);
-  const [zoom, setZoom] = React.useState(3); // initial zoom
+  const [selectedUser, setSelectedUser] = useState<UserType>();
+  const [zoom, setZoom] = React.useState(2); // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
     lat: 0,
     lng: 0,
@@ -27,7 +29,7 @@ function App() {
     setClicks([...clicks, e.latLng!]);
   };
 
-  const createNewUser = async () =>{
+  const createNewUser = async () => {
     await createUser();
     await setUsers(await getUsers());
   }
@@ -46,23 +48,25 @@ function App() {
     setCenter(m.getCenter()!.toJSON());
   };
 
-  const onMarkerClick = (e: google.maps.Marker) => {
-    console.log("Marker clicked", e)
+  const onMarkerClick = (marker: CustomMarkerType) => {
+    const user = getUserWithId(marker.id, users);
+    if (!user) return;
+    setSelectedUser(user);
   }
 
   return (
     <div className="flex flex-row w-[100vw] h-[100vh]">
-        <Wrapper apiKey={"AIzaSyAs4sGiB3YkSahsM4jG6fcgDXLruJYXMHs"} render={render}>
-          <CustomMap
-            center={center}
-            onClick={onClick}
-            onIdle={onIdle}
-            zoom={zoom}
+      <Wrapper apiKey={"AIzaSyAs4sGiB3YkSahsM4jG6fcgDXLruJYXMHs"} render={render}>
+        <CustomMap
+          center={center}
+          onClick={onClick}
+          onIdle={onIdle}
+          zoom={zoom}
             style={{flexGrow: "1", height: "100%"}}
           >
             {
               users.map((user, i) => (
-                <Marker key={i} position={user.coordinates} onClickHandler={onMarkerClick}/>
+                <Marker key={i} position={user.coordinates} onClick={onMarkerClick} id={user.id}/>
               ))
             }
           </CustomMap>
@@ -77,6 +81,20 @@ function App() {
           >CREATE USER
           </button>
         </div>
+        {selectedUser &&
+            <div className="flex flex-col items-center justify-center mt-3">
+                <hr className="border-blue-500 border-2 w-[90%] mb-2"/>
+              <p>Name: {selectedUser.firstname}</p>
+              <p>Surname: {selectedUser.lastname}</p>
+              <p>Email: {selectedUser.email}</p>
+              <button
+                className="p-2 pl-5 pr-5 border-2 border-danger rounded-md text-danger w-fit
+                   hover:border-danger-hover hover:text-danger-hover transition-all font-bold text-2xl mt-3"
+                onClick={() => deleteUser(selectedUser.id)}
+              >DELETE USER
+              </button>
+            </div>
+        }
       </div>
     </div>
   );

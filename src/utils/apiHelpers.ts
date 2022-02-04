@@ -24,3 +24,7 @@ export const getUsers = async (start: number = 0, amount:number = 10): Promise<A
 export const createUser = async () =>{
   const response = await fetch(CREATE_USER_URL);
 }
+
+export const deleteUser = async (id: string) =>{
+  console.log(id);
+}

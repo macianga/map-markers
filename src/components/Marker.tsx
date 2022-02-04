@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
 
-interface MarkerType extends google.maps.MarkerOptions {
-  onClickHandler: CallableFunction;
+export interface CustomMarkerType extends google.maps.MarkerOptions {
+  onClick: CallableFunction;
+  id: string;
 }
 
-function Marker(options: MarkerType) {
+function Marker(options: CustomMarkerType) {
   const [marker, setMarker] = useState<google.maps.Marker>();
 
 
@@ -24,8 +25,8 @@ function Marker(options: MarkerType) {
   useEffect(() => {
     if (marker) {
       marker.setOptions(options);
-      if(options.onClickHandler){
-        marker.addListener("click", () => options.onClickHandler(marker));
+      if(options.onClick){
+        marker.addListener("click", () => options.onClick(marker));
       }
     }
   }, [marker, options]);

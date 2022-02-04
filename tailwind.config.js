@@ -9,7 +9,8 @@ module.exports = {
         'darkmode-background': '#121212',
         'primary': '#9333ea',
         'primary-hover': '#a855f7',
-        'danger': '#dc2626'
+        'danger': '#dc2626',
+        'danger-hover': '#ee3b3b',
       },
     },
   },
