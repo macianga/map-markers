@@ -2,7 +2,6 @@ import "./App.css";
 
 import * as React from "react";
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
-// import Marker from "./Marker";
 import CustomMap from "./components/CustomMap";
 import Marker from "./components/Marker";
 
