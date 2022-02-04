@@ -27,14 +27,18 @@ function App() {
     setClicks([...clicks, e.latLng!]);
   };
 
-  const createUserFunction = async () =>{
+  const createNewUser = async () =>{
     await createUser();
+    await setUsers(await getUsers());
   }
 
-  const getUsersFunc = async () =>{
-    const data = await getUsers();
-    await setUsers(data);
-  }
+  useEffect(()=>{
+    const asyncFunc = async ()=>{
+      setUsers(await getUsers());
+    }
+
+    asyncFunc()
+  }, [])
 
   const onIdle = (m: google.maps.Map) => {
     console.log("onIdle");
@@ -47,22 +51,33 @@ function App() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Wrapper apiKey={"AIzaSyAs4sGiB3YkSahsM4jG6fcgDXLruJYXMHs"} render={render}>
-        <CustomMap
-          center={center}
-          onClick={onClick}
-          onIdle={onIdle}
-          zoom={zoom}
-          style={{flexGrow: "1", height: "100%"}}
-        >
-          {
-            users.map((user, i) => (
-              <Marker key={i} position={user.coordinates} onClickHandler={onMarkerClick}/>
-            ))
-          }
-        </CustomMap>
-      </Wrapper>
+    <div className="flex flex-row w-[100vw] h-[100vh]">
+        <Wrapper apiKey={"AIzaSyAs4sGiB3YkSahsM4jG6fcgDXLruJYXMHs"} render={render}>
+          <CustomMap
+            center={center}
+            onClick={onClick}
+            onIdle={onIdle}
+            zoom={zoom}
+            style={{flexGrow: "1", height: "100%"}}
+          >
+            {
+              users.map((user, i) => (
+                <Marker key={i} position={user.coordinates} onClickHandler={onMarkerClick}/>
+              ))
+            }
+          </CustomMap>
+        </Wrapper>
+      <div className="bg-gray-600 w-4/12">
+        <h1 className="text-5xl text-center mt-2 font-bold mb-10">Users on map</h1>
+        <div className="flex items-center justify-center">
+          <button
+            className="p-2 pl-5 pr-5 border-2 border-primary rounded-md text-primary w-fit
+            hover:border-primary-hover hover:text-primary-hover  transition-all font-bold text-2xl"
+            onClick={createNewUser}
+          >CREATE USER
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
