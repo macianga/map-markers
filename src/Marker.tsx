@@ -1,9 +1,9 @@
-import React from "react";
+import {useEffect, useState} from "react";
 
-function Marker (options: any) {
-  const [marker, setMarker] = React.useState<google.maps.Marker>();
+function Marker(options: google.maps.MarkerOptions) {
+  const [marker, setMarker] = useState<google.maps.Marker>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!marker) {
       setMarker(new google.maps.Marker());
     }
@@ -14,9 +14,9 @@ function Marker (options: any) {
         marker.setMap(null);
       }
     };
-  }, [marker]);
+  }, [marker])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (marker) {
       marker.setOptions(options);
     }
@@ -25,4 +25,4 @@ function Marker (options: any) {
   return null;
 }
 
-export default Marker;
+export default Marker

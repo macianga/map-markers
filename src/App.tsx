@@ -4,12 +4,14 @@ import * as React from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { createCustomEqual } from "fast-equals";
 import { isLatLngLiteral } from "@googlemaps/typescript-guards";
+import Marker from "./Marker";
+
 
 const render = (status: Status) => {
   return <h1>{status}</h1>;
 };
 
-const App: React.VFC = () => {
+function App() {
   const [clicks, setClicks] = React.useState<google.maps.LatLng[]>([]);
   const [zoom, setZoom] = React.useState(3); // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
@@ -77,7 +79,7 @@ const App: React.VFC = () => {
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      <Wrapper apiKey={""} render={render}>
+      <Wrapper apiKey={"AIzaSyAs4sGiB3YkSahsM4jG6fcgDXLruJYXMHs"} render={render}>
         <Map
           center={center}
           onClick={onClick}
@@ -94,7 +96,7 @@ const App: React.VFC = () => {
       {form}
     </div>
   );
-};
+}
 interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string };
   onClick?: (e: google.maps.MapMouseEvent) => void;
@@ -152,31 +154,6 @@ const Map: React.FC<MapProps> = ({
       })}
     </>
   );
-};
-
-const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
-  const [marker, setMarker] = React.useState<google.maps.Marker>();
-
-  React.useEffect(() => {
-    if (!marker) {
-      setMarker(new google.maps.Marker());
-    }
-
-    // remove marker from map on unmount
-    return () => {
-      if (marker) {
-        marker.setMap(null);
-      }
-    };
-  }, [marker]);
-
-  React.useEffect(() => {
-    if (marker) {
-      marker.setOptions(options);
-    }
-  }, [marker, options]);
-
-  return null;
 };
 
 const deepCompareEqualsForMaps = createCustomEqual(
