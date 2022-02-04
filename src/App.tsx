@@ -2,8 +2,9 @@ import "./App.css";
 
 import * as React from "react";
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
-import Marker from "./Marker";
+// import Marker from "./Marker";
 import CustomMap from "./CustomMap";
+import Marker from "./Marker";
 
 
 const render = (status: Status) => {
@@ -28,6 +29,10 @@ function App() {
     setZoom(m.getZoom()!);
     setCenter(m.getCenter()!.toJSON());
   };
+
+  const onMarkerClick = (e: google.maps.Marker) => {
+    console.log("Marker clicked", e)
+  }
 
   const form = (
     <div
@@ -87,7 +92,7 @@ function App() {
           style={{flexGrow: "1", height: "100%"}}
         >
           {clicks.map((latLng, i) => (
-            <Marker key={i} position={latLng}/>
+            <Marker key={i} position={latLng} onClickHandler={onMarkerClick}/>
           ))}
         </CustomMap>
       </Wrapper>
