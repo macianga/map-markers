@@ -1,9 +1,11 @@
 import "./App.css";
 
 import * as React from "react";
+import {useState} from "react";
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
 import CustomMap from "./components/CustomMap";
 import Marker from "./components/Marker";
+import {getUsers} from "./utils/apiHelpers";
 
 
 const render = (status: Status) => {
@@ -17,6 +19,8 @@ function App() {
     lat: 0,
     lng: 0,
   });
+
+  const [users, setUsers] = useState(getUsers());
 
   const onClick = (e: google.maps.MapMouseEvent) => {
     // avoid directly mutating state
@@ -90,9 +94,11 @@ function App() {
           zoom={zoom}
           style={{flexGrow: "1", height: "100%"}}
         >
-          {clicks.map((latLng, i) => (
-            <Marker key={i} position={latLng} onClickHandler={onMarkerClick}/>
-          ))}
+          {
+            users.map((user, i) => (
+              <Marker key={i} position={user.coordinates} onClickHandler={onMarkerClick}/>
+            ))
+          }
         </CustomMap>
       </Wrapper>
       {form}
