@@ -1,4 +1,5 @@
-import {cloneElement, EffectCallback, isValidElement, useEffect, useRef, useState, Children} from "react";
+import * as React from "react";
+import {Children, EffectCallback, useEffect, useRef} from "react";
 import {createCustomEqual} from "fast-equals";
 import {isLatLngLiteral} from "@googlemaps/typescript-guards";
 
@@ -6,7 +7,6 @@ interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string };
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
-  children?: any;
 }
 
 const deepCompareEqualsForMaps = createCustomEqual(
@@ -46,52 +46,57 @@ function useDeepCompareEffectForMaps(
   useEffect(callback, dependencies.map(useDeepCompareMemoize));
 }
 
-function Map(...{onClick, onIdle, children, style, ...options}: MapProps) {
+const CustomMap: React.FC<MapProps> = ({
+                                         onClick,
+                                         onIdle,
+                                         children,
+                                         style,
+                                         ...options
+                                       }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [mapElement, setMapElement] = useState<google.maps.Map>();
+  const [map, setMap] = React.useState<google.maps.Map>();
 
   useEffect(() => {
-    if (ref.current && !mapElement) {
-      setMapElement(new window.google.maps.Map(ref.current, {}));
+    if (ref.current && !map) {
+      setMap(new window.google.maps.Map(ref.current, {}));
     }
-  }, [ref, mapElement]);
+  }, [ref, map]);
 
   // because React does not do deep comparisons, a custom hook is used
   // see discussion in https://github.com/googlemaps/js-samples/issues/946
   useDeepCompareEffectForMaps(() => {
-    if (mapElement) {
-      mapElement.setOptions(options);
+    if (map) {
+      map.setOptions(options);
     }
-  }, [mapElement, options]);
+  }, [map, options]);
 
   useEffect(() => {
-    if (mapElement) {
+    if (map) {
       ["click", "idle"].forEach((eventName) =>
-        google.maps.event.clearListeners(mapElement, eventName)
+        google.maps.event.clearListeners(map, eventName)
       );
 
       if (onClick) {
-        mapElement.addListener("click", onClick);
+        map.addListener("click", onClick);
       }
 
       if (onIdle) {
-        mapElement.addListener("idle", () => onIdle(mapElement));
+        map.addListener("idle", () => onIdle(map));
       }
     }
-  }, [mapElement, onClick, onIdle]);
+  }, [map, onClick, onIdle]);
 
   return (
     <>
       <div ref={ref} style={style}/>
       {Children.map(children, (child) => {
-        if (isValidElement(child)) {
+        if (React.isValidElement(child)) {
           // set the map prop on the child component
-          return cloneElement(child, mapElement);
+          return React.cloneElement(child, {map});
         }
       })}
     </>
   );
 }
 
-
-export default Map
+export default CustomMap
