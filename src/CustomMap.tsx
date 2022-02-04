@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Children, EffectCallback, useEffect, useRef} from "react";
+import {Children, cloneElement, EffectCallback, isValidElement, useEffect, useRef} from "react";
 import {createCustomEqual} from "fast-equals";
 import {isLatLngLiteral} from "@googlemaps/typescript-guards";
 
@@ -90,9 +90,9 @@ const CustomMap: React.FC<MapProps> = ({
     <>
       <div ref={ref} style={style}/>
       {Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
+        if (isValidElement(child)) {
           // set the map prop on the child component
-          return React.cloneElement(child, {map});
+          return cloneElement(child, {map});
         }
       })}
     </>
