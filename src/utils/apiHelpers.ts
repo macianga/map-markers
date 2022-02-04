@@ -17,13 +17,10 @@ export type UserType = {
 export const getUsers = async (start: number = 0, amount:number = 10): Promise<Array<UserType>> => {
   const response = await fetch(GET_ALL_USERS_URL);
   const json = (await response.json()).data;
-  console.log(json)
   return json
 }
 
 
 export const createUser = async () =>{
-  console.log(CREATE_USER_URL)
   const response = await fetch(CREATE_USER_URL);
-  console.log(response);
 }
