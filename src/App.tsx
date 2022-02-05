@@ -1,3 +1,4 @@
+/* global google */
 import "./App.css";
 
 import * as React from "react";
@@ -7,6 +8,7 @@ import CustomMap from "./components/CustomMap";
 import Marker, {CustomMarkerType} from "./components/Marker";
 import {createUser, deleteUser, getUsers, UserType} from "./utils/apiHelpers";
 import {getUserWithId} from "./utils/utils";
+import Animation = google.maps.Animation;
 
 
 const render = (status: Status) => {
@@ -73,13 +75,19 @@ function App() {
           >
             {
               users.map((user, i) => (
-                <Marker key={i} position={user.coordinates} onClick={onMarkerClick} id={user.id}/>
+                <Marker
+                  key={i}
+                  position={user.coordinates}
+                  onClick={onMarkerClick}
+                  id={user.id}
+                  // animation={user.id === selectedUser?.id ? Animation.BOUNCE : null}
+                />
               ))
             }
           </CustomMap>
         </Wrapper>
       <div className="bg-gray-600 w-4/12">
-        <h1 className="text-5xl text-center mt-2 font-bold mb-10">Users on map</h1>
+        <h1 className="text-5xl text-center mt-2 font-bold mb-10 text-cyan-600">Users on map</h1>
         <div className="flex items-center justify-center">
           <button
             className="p-2 pl-5 pr-5 border-2 border-primary rounded-md text-primary w-fit
