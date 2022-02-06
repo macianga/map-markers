@@ -4,8 +4,9 @@ import {useEffect, useState} from "react";
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
 import CustomMap from "./components/CustomMap";
 import Marker, {CustomMarkerType} from "./components/Marker";
-import {createUser, deleteUser, getUsers, UserType} from "./utils/apiHelpers";
-import {getUserWithId} from "./utils/utils";
+import {createUser, deleteUser, getUsers} from "./utils/apiHelpers";
+import {findUserWithId} from "./utils/utils";
+import {UserType} from "./utils/types";
 
 
 const render = (status: Status) => {
@@ -35,23 +36,22 @@ function App() {
     }
   }
 
-  const deleteUserFunc = async () => {
+  const deleteUserWrapper = async () => {
     if (!selectedUser) return;
     await deleteUser(selectedUser.id);
     await fetchAndSetUsers()
     setSelectedUser(null)
   }
 
-  useEffect(() => {
-    fetchAndSetUsers();
-  }, [])
-
-
   const onMarkerClick = (marker: CustomMarkerType) => {
-    const user = getUserWithId(marker.id, users);
+    const user = findUserWithId(marker.id, users);
     if (!user) return;
     setSelectedUser(user);
   }
+
+  useEffect(() => {
+    fetchAndSetUsers();
+  }, [])
 
   return (
     <div className="flex flex-row w-[100vw] h-[100vh]">
@@ -93,7 +93,7 @@ function App() {
                 <button
                     className="p-2 pl-5 pr-5 border-2 border-danger rounded-md text-danger w-fit
                  hover:border-danger-hover hover:text-danger-hover transition-all font-bold text-2xl mt-3"
-                    onClick={deleteUserFunc}
+                    onClick={deleteUserWrapper}
                 >DELETE USER
                 </button>
             </div>
