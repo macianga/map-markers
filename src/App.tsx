@@ -55,7 +55,7 @@ function App() {
 
   return (
     <div className="flex flex-row w-[100vw] h-[100vh]">
-      <Wrapper apiKey={"AIzaSyDfeRyZG3CgJ6145NeXjPrpC7TbxQvc54I"} render={render}>
+      <Wrapper apiKey={import.meta.env.VITE_GOOGLE_MAP_KEY + ""} render={render}>
         <CustomMap
           center={center}
           zoom={zoom}
