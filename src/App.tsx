@@ -21,24 +21,34 @@ function App() {
     lng: 0,
   });
   const [users, setUsers] = useState<Array<UserType>>([]);
+  const [status, setStatus] = useState<{message: string, error: boolean}>({message: "", error: false})
 
   const fetchAndSetUsers = async () => {
     const [responseOk, responseData] = await getUsers();
     if (responseOk) {
       setUsers(responseData.response);
+    }else{
+      setStatus({message: "Couldn't load users", error: true});
     }
   }
 
   const createNewUser = async () => {
     const [responseOk, responseData] = await createUser();
     if (responseOk) {
+      setStatus({message: "Successfully created user", error: false});
       await fetchAndSetUsers();
+    }else{
+      setStatus({message: "Couldn't create user", error: true});
     }
   }
 
   const deleteUserWrapper = async () => {
     if (!selectedUser) return;
-    await deleteUser(selectedUser.id);
+    const [responseOk, responseData] = await deleteUser(selectedUser.id);
+    if(responseOk)
+      setStatus({message: "Successfully deleted user", error: false});
+    else
+      setStatus({message: "Couldn't delete user", error: true});
     await fetchAndSetUsers()
     setSelectedUser(null)
   }
@@ -75,7 +85,8 @@ function App() {
         </CustomMap>
       </Wrapper>
       <div className="bg-gray-600 w-4/12">
-        <h1 className="text-5xl text-center mt-2 font-bold mb-10 text-cyan-600">Users on map</h1>
+        <h1 className="text-5xl text-center mt-2 font-bold mb-3 text-cyan-600">Users on map</h1>
+         <span className={`block text-2xl mb-5 text-center ${status.error ? "text-danger" : "text-green-500"}`}>{status.message}</span>
         <div className="flex items-center justify-center">
           <button
             className="p-2 pl-5 pr-5 border-2 border-primary rounded-md text-primary w-fit

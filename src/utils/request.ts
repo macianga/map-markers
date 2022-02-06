@@ -29,15 +29,19 @@ export const request = async <JSONSchema>(url: string, method: string = "GET", u
 
   url_obj.search = url_params ? url_params.toString() : "";
 
-  const response = await fetch(url_obj.toString(), {
-    method: method,
-  });
+  try{
+    const response = await fetch(url_obj.toString(), {
+      method: method,
+    });
 
-  if (response.status === 200 && response.ok) {
-    const json = await getJson<{ code: number, data: JSONSchema, message: string }>(response);
-    return [response.ok, {response: json.data, error: ""}]
+    if (response.status === 200 && response.ok) {
+      const json = await getJson<{ code: number, data: JSONSchema, message: string }>(response);
+      return [response.ok, {response: json.data, error: ""}]
+    }
+
+    const error = await getResponseError(response)
+    return [response.ok, {response: <JSONSchema>{}, error: error}]
+  }catch (e) {
+    return [false, {response: <JSONSchema>{}, error: "An error has occured"}]
   }
-
-  const error = await getResponseError(response)
-  return [response.ok, {response: <JSONSchema>{}, error: error}]
 }
