@@ -78,7 +78,7 @@ function App() {
                 position={user.coordinates}
                 onClick={onMarkerClick}
                 id={user.id}
-                // animation={user.id === selectedUser?.id ? Animation.BOUNCE : null}
+                animation={user.id === selectedUser?.id ? google.maps.Animation.BOUNCE : null}
               />
             ))
           }
