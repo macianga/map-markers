@@ -31,24 +31,29 @@ function App() {
     setClicks([...clicks, e.latLng!]);
   };
 
+  const fetchAndSetUsers = async () =>{
+    const [responseOk, responseData] = await getUsers();
+    if(responseOk){
+      setUsers(responseData.response);
+    }
+  }
+
   const createNewUser = async () => {
-    await createUser();
-    await setUsers(await getUsers());
+    const [responseOk, responseData] = await createUser();
+    if(responseOk){
+      await fetchAndSetUsers();
+    }
   }
 
   const deleteUserFunc = async () => {
     if(!selectedUser) return;
     await deleteUser(selectedUser.id);
-    setUsers(await getUsers());
+    await fetchAndSetUsers()
     setSelectedUser(null)
   }
 
   useEffect(()=>{
-    const asyncFunc = async ()=>{
-      setUsers(await getUsers());
-    }
-
-    asyncFunc()
+    fetchAndSetUsers();
   }, [])
 
   const onIdle = (m: google.maps.Map) => {
@@ -65,7 +70,7 @@ function App() {
 
   return (
     <div className="flex flex-row w-[100vw] h-[100vh]">
-      <Wrapper apiKey={"AIzaSyAs4sGiB3YkSahsM4jG6fcgDXLruJYXMHs"} render={render}>
+      <Wrapper apiKey={"AIzaSyDfeRyZG3CgJ6145NeXjPrpC7TbxQvc54I"} render={render}>
         <CustomMap
           center={center}
           onClick={onClick}
