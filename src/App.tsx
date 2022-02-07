@@ -119,11 +119,17 @@ function App() {
           )
         }
         {selectedUser &&
-            <div className="flex flex-col items-center justify-center mt-3">
+            <div className="flex flex-col items-center mt-3">
                 <hr className="border-blue-500 border-2 w-[90%] mb-2"/>
-                <p>Name: {selectedUser.firstname}</p>
-                <p>Surname: {selectedUser.lastname}</p>
-                <p>Email: {selectedUser.email}</p>
+                <p className="text-left w-[90%] text-xl font-bold" >
+                    Name: <span className="font-normal">{selectedUser.firstname}</span>
+                </p>
+                <p className="text-left w-[90%] text-xl font-bold" >
+                    Surname: <span className="font-normal">{selectedUser.lastname}</span>
+                </p>
+                <p className="text-left w-[90%] text-xl font-bold" >
+                    Email: <span className="font-normal">{selectedUser.email}</span>
+                </p>
                 <button
                     className="p-2 pl-5 pr-5 border-2 border-danger rounded-md text-danger w-fit
                  hover:border-danger-hover hover:text-danger-hover transition-all font-bold text-2xl mt-3"
