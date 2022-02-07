@@ -29,20 +29,30 @@ async def delete_user_data(user_id: str):
 @router.get("/create", response_description="Create user")
 async def create_user():
     async with httpx.AsyncClient() as client:
-        response = await client.get(RANDOM_USER_SERVICE_URL)
-        if response.status_code != 200:
+        try:
+            response = await client.get(RANDOM_USER_SERVICE_URL)
+            if response.status_code != 200:
+                return ErrorResponseModel("An error occurred", 404, f"Can't create user.")
+            json = response.json()
+            user_json_data = json['results'][0]
+
+            latitude = float(user_json_data["location"]["coordinates"]["latitude"])
+            longitude = float(user_json_data["location"]["coordinates"]["longitude"])
+
+            # clamp coordinates to their limits
+            latitude = max(-90.0, min(latitude, 90.0))
+            longitude = max(-180.0, min(longitude, 80.0))
+
+            user = UserModel(email=user_json_data["email"],
+                             firstname=user_json_data["name"]["first"],
+                             lastname=user_json_data["name"]["last"],
+                             coordinates=Coordinates(
+                                 lat=latitude,
+                                 lng=longitude,
+                             )
+                             )
+
+            new_user = await add_user(jsonable_encoder(user))
+            return ResponseModel(new_user, "User added successfully.")
+        except:
             return ErrorResponseModel("An error occurred", 404, f"Can't create user.")
-        json = response.json()
-        user_json_data = json['results'][0]
-
-        user = UserModel(email=user_json_data["email"],
-                         firstname=user_json_data["name"]["first"],
-                         lastname=user_json_data["name"]["last"],
-                         coordinates=Coordinates(
-                             lat=float(user_json_data["location"]["coordinates"]["latitude"]),
-                             lng=float(user_json_data["location"]["coordinates"]["longitude"]),
-                         )
-                         )
-
-        new_user = await add_user(jsonable_encoder(user))
-        return ResponseModel(new_user, "User added successfully.")
