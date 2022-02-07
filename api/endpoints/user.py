@@ -12,13 +12,13 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_description="Users retrieved")
+@router.get("", response_description="Users retrieved")
 async def get_users():
     users = await retrieve_users()
     return ResponseModel(users, "Users data retrieved successfully")
 
 
-@router.delete("/", response_description="User data deleted from the database")
+@router.delete("", response_description="User data deleted from the database")
 async def delete_user_data(user_id: str):
     deleted_user = await delete_user(user_id)
     if deleted_user:
