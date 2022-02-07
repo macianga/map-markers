@@ -2,7 +2,7 @@ import {apiResponseType, request} from "./request";
 import {UserType} from "./types";
 
 const BASE_URL = import.meta.env.VITE_API_HOST
-const CREATE_USER_URL = BASE_URL + "/users/create"
+const CREATE_USER_URL = BASE_URL + "/users/create-random"
 const GET_ALL_USERS_URL = BASE_URL + "/users"
 const DELETE_USER_URL = BASE_URL + "/users"
 
@@ -12,7 +12,7 @@ export const getUsers = async (): Promise<apiResponseType<Array<UserType>>> => {
 }
 
 export const createUser = async () =>{
-  return await request<UserType>(CREATE_USER_URL);
+  return await request<UserType>(CREATE_USER_URL, "POST");
 }
 
 export const deleteUser = async (id: string) =>{
