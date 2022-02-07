@@ -26,7 +26,7 @@ async def delete_user_data(user_id: str):
     return ErrorResponseModel("An error occurred", 404, f"User with id {user_id} doesn't exist")
 
 
-@router.get("/create", response_description="Create user")
+@router.post("/create-random", response_description="Create user")
 async def create_user():
     async with httpx.AsyncClient() as client:
         try:
