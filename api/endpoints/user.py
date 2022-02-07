@@ -2,7 +2,7 @@ import httpx as httpx
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 
-from api.config import RANDOM_USER_SERVICE_URL
+from api.config.config import RANDOM_USER_SERVICE_URL
 from api.database.database import retrieve_users, add_user, delete_user
 from api.models.users import ResponseModel, ErrorResponseModel, UserModel, Coordinates
 

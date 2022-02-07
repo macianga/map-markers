@@ -1,16 +1,14 @@
 import motor.motor_asyncio
 from bson import ObjectId
-from decouple import config
 
 from .database_helper import user_helper
+from ..config.config import MONGO_CONNECTION_URL
 
-MONGO_DETAILS = config('MONGO_DETAILS')
-
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_CONNECTION_URL)
 
 database = client.maps
 
-user_collection = database.get_collection('users_collection')
+user_collection = database.get_collection('users')
 
 
 async def retrieve_users():

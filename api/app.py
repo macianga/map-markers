@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.config import ALLOW_ORIGINS
+from api.config.config import ALLOW_ORIGINS
 
 
 def create_app():
