@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 def create_app():
     app = FastAPI()
-    # app.add_event_handler("shutdown", close_db)
 
     app.add_middleware(
         CORSMiddleware,
@@ -18,14 +17,14 @@ def create_app():
     return app
 
 
-app = create_app()
+api_app = create_app()
 
 
-@app.on_event("startup")
+@api_app.on_event("startup")
 def register_routes():
     from endpoints.user import router
-    app.include_router(router)
+    api_app.include_router(router)
 
-    @app.get("/", tags=["Root"])
+    @api_app.get("/", tags=["Root"])
     async def read_root():
         return {"message": "For more API information go to /docs"}
