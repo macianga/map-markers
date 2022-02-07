@@ -4,9 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 def create_app():
-    app = FastAPI()
+    api_app = FastAPI()
 
-    app.add_middleware(
+    api_app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
         allow_credentials=True,
@@ -14,17 +14,17 @@ def create_app():
         allow_headers=["*"],
     )
 
-    return app
+    return api_app
 
 
-api_app = create_app()
+app = create_app()
 
 
-@api_app.on_event("startup")
+@app.on_event("startup")
 def register_routes():
     from endpoints.user import router
-    api_app.include_router(router)
+    app.include_router(router)
 
-    @api_app.get("/", tags=["Root"])
+    @app.get("/", tags=["Root"])
     async def read_root():
         return {"message": "For more API information go to /docs"}
