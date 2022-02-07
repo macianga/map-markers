@@ -1,6 +1,8 @@
 # custom
 .env.production
 .env.development
+.firebase
+.firebaserc
 
 #
 .DS_Store
