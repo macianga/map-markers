@@ -42,6 +42,6 @@ export const request = async <JSONSchema>(url: string, method: string = "GET", u
     const error = await getResponseError(response)
     return [response.ok, {response: <JSONSchema>{}, error: error}]
   }catch (e) {
-    return [false, {response: <JSONSchema>{}, error: "An error has occured"}]
+    return [false, {response: <JSONSchema>{}, error: "An error has occurred"}]
   }
 }
